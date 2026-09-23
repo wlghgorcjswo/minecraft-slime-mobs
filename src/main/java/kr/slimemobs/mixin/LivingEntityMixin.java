@@ -27,7 +27,7 @@ public abstract class LivingEntityMixin {
         if (!(self.level() instanceof ServerLevel level)) return;
 
         slimeMobs$alreadySplit = true;
-        int count = 2 + self.getRandom().nextInt(3);
+        int count = 2;
 
         for (int i = 0; i < count; i++) {
             Entity made = self.getType().create(level, EntitySpawnReason.MOB_SUMMONED);
