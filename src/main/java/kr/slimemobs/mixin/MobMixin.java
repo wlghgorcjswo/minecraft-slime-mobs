@@ -1,7 +1,6 @@
 package kr.slimemobs.mixin;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.phys.Vec3;
@@ -30,24 +29,4 @@ public abstract class MobMixin {
         }
     }
 
-    @Inject(method = "remove", at = @At("HEAD"))
-    private void slimeMobs$splitOnDeath(Entity.RemovalReason reason, CallbackInfo ci) {
-        Mob self = (Mob)(Object)this;
-        if (reason != Entity.RemovalReason.KILLED || self.level().isClientSide()) return;
-        if (!(self.level() instanceof ServerLevel level)) return;
-        if (slimeMobs$generation >= 2) return;
-
-        int count = 2 + self.getRandom().nextInt(3);
-        for (int i = 0; i < count; i++) {
-            Entity made = self.getType().create(level, EntitySpawnReason.MOB_SUMMONED);
-            if (!(made instanceof Mob child)) continue;
-
-            ((MobMixin)(Object)child).slimeMobs$generation = slimeMobs$generation + 1;
-            double ox = (self.getRandom().nextDouble() - 0.5D) * 1.4D;
-            double oz = (self.getRandom().nextDouble() - 0.5D) * 1.4D;
-            child.setPos(self.getX() + ox, self.getY() + 0.2D, self.getZ() + oz);
-            child.setDeltaMovement(ox * 0.2D, 0.4D, oz * 0.2D);
-            level.addFreshEntity(child);
-        }
-    }
 }
