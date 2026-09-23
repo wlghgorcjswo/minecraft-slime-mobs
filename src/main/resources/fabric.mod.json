@@ -1,0 +1,13 @@
+{
+ "schemaVersion":1,
+ "id":"slimemobs",
+ "version":"${version}",
+ "name":"Slime Mobs",
+ "description":"Makes mobs hop like slimes and split into smaller copies on death.",
+ "authors":["Moon"],
+ "license":"CC0-1.0",
+ "environment":"*",
+ "entrypoints":{"main":["kr.slimemobs.SlimeMobsMod"]},
+ "mixins":["slimemobs.mixins.json"],
+ "depends":{"fabricloader":">=0.19.5","minecraft":"~26.3","java":">=25","fabric-api":"*"}
+}
