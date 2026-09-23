@@ -27,7 +27,7 @@ public abstract class LivingEntityMixin {
         if (!(self.level() instanceof ServerLevel level)) return;
 
         slimeMobs$alreadySplit = true;
-        int count = 2;
+        int count = 2 + self.getRandom().nextInt(3);
 
         for (int i = 0; i < count; i++) {
             Entity made = self.getType().create(level, EntitySpawnReason.MOB_SUMMONED);
@@ -36,6 +36,14 @@ public abstract class LivingEntityMixin {
             int childGeneration = slimeMobs$generation + 1;
             if ((Object) child instanceof LivingEntityMixin childMixin) {
                 childMixin.slimeMobs$generation = childGeneration;
+            }
+
+            // Shrink hard on every split, like vanilla slimes.
+            // First children are about half size, second generation about quarter size.
+            if (child.getAttribute(Attributes.SCALE) != null) {
+                double baseScale = child.getAttributeBaseValue(Attributes.SCALE);
+                double sizeFactor = childGeneration == 1 ? 0.52D : 0.27D;
+                child.getAttribute(Attributes.SCALE).setBaseValue(Math.max(0.1D, baseScale * sizeFactor));
             }
 
             // Each split generation is weaker, just like a smaller slime.
