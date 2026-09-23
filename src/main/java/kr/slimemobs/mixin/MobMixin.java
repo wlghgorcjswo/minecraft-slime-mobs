@@ -3,7 +3,7 @@ package kr.slimemobs.mixin;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -39,7 +39,7 @@ public abstract class MobMixin {
 
         int count = 2 + self.getRandom().nextInt(3);
         for (int i = 0; i < count; i++) {
-            Entity made = self.getType().create(level, MobSpawnType.MOB_SUMMONED);
+            Entity made = self.getType().create(level, EntitySpawnReason.MOB_SUMMONED);
             if (!(made instanceof Mob child)) continue;
 
             ((MobMixin)(Object)child).slimeMobs$generation = slimeMobs$generation + 1;
