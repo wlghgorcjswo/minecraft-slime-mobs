@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,8 +33,22 @@ public abstract class LivingEntityMixin {
             Entity made = self.getType().create(level, EntitySpawnReason.MOB_SUMMONED);
             if (!(made instanceof Mob child)) continue;
 
+            int childGeneration = slimeMobs$generation + 1;
             if ((Object) child instanceof LivingEntityMixin childMixin) {
-                childMixin.slimeMobs$generation = slimeMobs$generation + 1;
+                childMixin.slimeMobs$generation = childGeneration;
+            }
+
+            // Each split generation is weaker, just like a smaller slime.
+            double healthFactor = childGeneration == 1 ? 0.65D : 0.40D;
+            double damageFactor = childGeneration == 1 ? 0.75D : 0.55D;
+            if (child.getAttribute(Attributes.MAX_HEALTH) != null) {
+                double base = child.getAttributeBaseValue(Attributes.MAX_HEALTH);
+                child.getAttribute(Attributes.MAX_HEALTH).setBaseValue(Math.max(1.0D, base * healthFactor));
+                child.setHealth(child.getMaxHealth());
+            }
+            if (child.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+                double base = child.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
+                child.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(Math.max(0.5D, base * damageFactor));
             }
 
             double ox = (self.getRandom().nextDouble() - 0.5D) * 1.4D;
