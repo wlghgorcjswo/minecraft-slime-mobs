@@ -2,6 +2,14 @@
   "required": true,
   "package": "kr.slimemobs.mixin",
   "compatibilityLevel": "JAVA_25",
-  "mixins": ["MobMixin", "LivingEntityMixin"],
-  "injectors": { "defaultRequire": 1 }
+  "mixins": [
+    "MobMixin",
+    "LivingEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "LivingEntityRendererMixin"
+  ]
 }
